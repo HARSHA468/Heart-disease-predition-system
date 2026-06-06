@@ -1,0 +1,37 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Uploads (user-generated)
+uploads/
+
+# Local database (will be recreated on deploy)
+patient_records.db
+
+# Archives and raw datasets
+*.zip
+archive (2)/
+heart+disease/
+heart_disease/
+New folder/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Output/debug files
+db_output.txt
+out_test.txt
+out_xgboost.txt
+examples_out.txt

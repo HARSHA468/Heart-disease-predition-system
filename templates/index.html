@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Risk Assessment | CardioHealth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <style>
+        :root {
+            --apollo-teal: #00a8b5;
+            --apollo-teal-dark: #008c96;
+            --apollo-teal-light: #e6f7f8;
+            --apollo-orange: #f26522;
+            --apollo-orange-light: #fff4ef;
+            --apollo-navy: #1a1f71;
+            --apollo-navy-light: #2d3494;
+            --text-dark: #333333;
+            --text-gray: #666666;
+            --text-light: #999999;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-light: #e8e8e8;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--apollo-navy);
+            color: white;
+            padding: 8px 0;
+            font-size: 0.8rem;
+        }
+
+        .top-bar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .top-bar-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .emergency-call {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .emergency-call .phone-icon {
+            background: var(--apollo-orange);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--apollo-teal) 0%, var(--apollo-navy) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--apollo-navy);
+        }
+
+        .logo-text span {
+            color: var(--apollo-teal);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--apollo-teal);
+        }
+
+        .nav-link.active {
+            color: var(--apollo-teal);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -24px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--apollo-teal);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .cta-button {
+            background: var(--apollo-orange);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #d95a1b;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--apollo-navy) 0%, var(--apollo-navy-light) 100%);
+            padding: 50px 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 168, 181, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 550px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--apollo-orange);
+            border-radius: 50%;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 15px;
+        }
+
+        .hero-title span {
+            color: var(--apollo-teal);
+        }
+
+        .hero-desc {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--apollo-teal);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .heart-graphic {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--apollo-teal) 0%, rgba(0, 168, 181, 0.5) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Views */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Grid Layouts */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .cardiologists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .doc-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--apollo-teal) 0%, var(--apollo-teal-dark) 100%);
+            padding: 20px 25px;
+            color: white;
+        }
+
+        .card-header-alt {
+            background: linear-gradient(135deg, var(--apollo-navy) 0%, var(--apollo-navy-light) 100%);
+        }
+
+        .card-header-orange {
+            background: linear-gradient(135deg, var(--apollo-orange) 0%, #d95a1b 100%);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Doctor Card Specifics */
+        .doc-img-container {
+            height: 200px;
+            background: var(--bg-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doc-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            transition: transform 0.5s;
+        }
+
+        .doc-card:hover .doc-img {
+            transform: scale(1.05);
+        }
+
+        .doc-info {
+            padding: 20px;
+        }
+
+        .doc-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--apollo-navy);
+            margin-bottom: 5px;
+        }
+
+        .doc-spec {
+            font-size: 0.9rem;
+            color: var(--apollo-teal);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .doc-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+        }
+
+        .doc-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-light);
+            color: var(--apollo-navy);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .doc-btn:hover {
+            background: var(--apollo-navy);
+            color: white;
+            border-color: var(--apollo-navy);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Form Styles */
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--apollo-navy);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--apollo-teal);
+            border-radius: 2px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.span-2 {
+            grid-column: span 2;
+        }
+
+        .form-group.span-3 {
+            grid-column: span 3;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+        }
+
+        .form-input,
+        .form-select,
+        textarea.form-input {
+            height: 44px;
+            padding: 0 14px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        textarea.form-input {
+            height: auto;
+            padding: 12px 14px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--apollo-teal);
+            box-shadow: 0 0 0 3px var(--apollo-teal-light);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            border-radius: 16px;
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.open .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            background: var(--apollo-navy);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3000;
+            border-left: 5px solid var(--apollo-teal);
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notif-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .notif-success .notif-icon {
+            color: var(--apollo-teal);
+        }
+
+        .notif-error .notif-icon {
+            color: #dc2626;
+        }
+
+        .notif-error {
+            border-left-color: #dc2626;
+        }
+
+        .notif-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .notif-msg {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        /* Existing styles for results, meters etc */
+        .results-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .result-box {
+            padding: 18px;
+            border-radius: 10px;
+            background: var(--bg-light);
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .status-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-tag.danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .status-tag.success {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .risk-meter {
+            margin-top: 8px;
+        }
+
+        .meter-bar-bg {
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .meter-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.8s ease;
+        }
+
+        .meter-bar-fill.low {
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+        }
+
+        .meter-bar-fill.medium {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .meter-bar-fill.high {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .final-result {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .final-result.high-risk {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 2px solid #fecaca;
+        }
+
+        .final-result.low-risk {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 2px solid #a7f3d0;
+        }
+
+        .final-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .high-risk .final-text {
+            color: #dc2626;
+        }
+
+        .low-risk .final-text {
+            color: #059669;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 52px;
+            background: linear-gradient(135deg, var(--apollo-orange) 0%, #d95a1b 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(242, 101, 34, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--apollo-navy);
+            color: white;
+            padding: 30px 20px;
+            margin-top: auto;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Horizontal Card */
+        .card-horizontal {
+            display: flex;
+            flex-direction: row;
+            background: var(--bg-white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .card-horizontal-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-horizontal-img-col {
+            flex: 1;
+            min-height: 300px;
+            background: var(--bg-light);
+            position: relative;
+        }
+
+        .card-horizontal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .ch-title {
+            color: var(--apollo-navy);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .ch-desc {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .ch-read-more {
+            color: var(--apollo-teal);
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .ch-sub-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .pill-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid var(--apollo-teal-light);
+            border-radius: 20px;
+            color: var(--apollo-teal);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .btn-outline-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            border: 2px solid var(--apollo-navy);
+            border-radius: 25px;
+            color: var(--apollo-navy);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            background: transparent;
+        }
+
+        .btn-outline-arrow:hover {
+            background: var(--apollo-navy);
+            color: white;
+        }
+        
+        .btn-outline-arrow svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            transition: transform 0.2s;
+        }
+        
+        .btn-outline-arrow:hover svg {
+            transform: translateX(4px);
+        }
+
+        .ch-button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .card-horizontal {
+                flex-direction: column;
+            }
+            .card-horizontal-img-col {
+                min-height: 250px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.span-3,
+            .form-group.span-2 {
+                grid-column: span 1;
+            }
+
+            .hero-content-wrapper {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-inner">
+            <span>Trusted by 10,000+ Patients Worldwide</span>
+            <div class="top-bar-right">
+                <span>📧 support@cardiohealth.com</span>
+                <div class="emergency-call">
+                    <span class="phone-icon">📞</span>
+                    <span>Emergency: 1800-123-456</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a onclick="showView('home')" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                </div>
+                <span class="logo-text">Cardio<span>Health</span></span>
+            </a>
+            <nav class="nav-links">
+                <a onclick="showView('home')" class="nav-link active" id="nav-home">Risk Assessment</a>
+                <a onclick="showView('cardiologists')" class="nav-link" id="nav-cardiologists">Top Cardiologists</a>
+                <a onclick="showView('services')" class="nav-link" id="nav-services">Services</a>
+                <a onclick="showView('about')" class="nav-link" id="nav-about">About Us</a>
+                <a onclick="showView('contact')" class="nav-link" id="nav-contact">Contact</a>
+            </nav>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button id="themeToggle" class="theme-toggle" title="Toggle Dark/Light Mode">
+                    🌙
+                </button>
+                <button onclick="openAppointmentModal()" class="cta-button">Book Appointment</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Views -->
+    <main class="main-content">
+
+        <!-- VIEW: HOME (Risk Assessment) -->
+        <div id="view-home" class="view-section active">
+            <section class="hero" style="border-radius: 20px; margin-bottom: 40px;">
+                <div class="hero-inner">
+                    <div class="hero-content-wrapper">
+                        <div class="hero-content">
+                            <div class="hero-badge">
+                                <span class="hero-badge-dot"></span>
+                                AI-Powered Cardiac Analysis
+                            </div>
+                            <h1 class="hero-title">Advanced <span>Heart Disease</span> Risk Assessment</h1>
+                            <p class="hero-desc">Using state-of-the-art XGBoost and Deep Learning models to predict
+                                cardiovascular risk with clinical-grade accuracy.</p>
+                        </div>
+                        <div class="hero-visual">
+                            <div class="heart-graphic">
+                                <svg viewBox="0 0 24 24" fill="white" width="100" height="100">
+                                    <path
+                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="content-grid">
+                <!-- Form Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
+                            </svg>
+                            Patient Clinical Data
+                        </h2>
+                        <p class="card-subtitle">Enter patient information for risk analysis</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="predictionForm" onsubmit="handlePrediction(event)">
+                            <!-- Demographics & Pain -->
+                            <div class="form-section">
+                                <div class="section-title">Patient Demographics & Pain History</div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Age <span class="unit">(years)</span></label>
+                                        <input type="number" name="age" class="form-input" placeholder="Enter age"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Sex</label>
+                                        <select name="sex" class="form-select">
+                                            <option value="1">Male</option>
+                                            <option value="0">Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Chest Pain Location</label>
+                                        <select name="painloc" class="form-select">
+                                            <option value="1">Substernal</option>
+                                            <option value="0">Otherwise</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Pain Provoked by Exertion</label>
+                                        <select name="painexer" class="form-select">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Pain Relieved by Rest</label>
+                                        <select name="relrest" class="form-select">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Chest Pain Type</label>
+                                        <select name="cp" class="form-select">
+                                            <option value="1">Typical Angina</option>
+                                            <option value="2">Atypical Angina</option>
+                                            <option value="3">Non-anginal Pain</option>
+                                            <option value="4">Asymptomatic</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Vital Signs & History -->
+                            <div class="form-section">
+                                <div class="section-title">Vital Signs & History</div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Resting BP <span class="unit">(mm Hg)</span></label>
+                                        <input type="number" name="trestbps" class="form-input" placeholder="e.g., 120"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Cholesterol <span class="unit">(mg/dL)</span></label>
+                                        <input type="number" name="chol" class="form-input" placeholder="e.g., 200"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Fasting Sugar <span
+                                                class="unit">(mg/dL)</span></label>
+                                        <input type="number" name="fbs" class="form-input" placeholder="e.g., 95"
+                                            min="0" max="600" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Smoker</label>
+                                        <select name="smoke" class="form-select">
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Cigarettes per Day</label>
+                                        <input type="number" name="cigs" class="form-input" placeholder="e.g., 0"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Years as Smoker</label>
+                                        <input type="number" name="years" class="form-input" placeholder="e.g., 0"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">History of Diabetes</label>
+                                        <select name="dm" class="form-select">
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Family History of CAD</label>
+                                        <select name="famhist" class="form-select">
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cardiac Tests -->
+                            <div class="form-section">
+                                <div class="section-title">Cardiac Assessment</div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Resting ECG</label>
+                                        <select name="restecg" class="form-select">
+                                            <option value="0">Normal</option>
+                                            <option value="1">ST-T Abnormality</option>
+                                            <option value="2">LV Hypertrophy</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Thal Test Duration <span
+                                                class="unit">(min)</span></label>
+                                        <input type="number" name="thaldur" class="form-input" placeholder="e.g., 10"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Max Heart Rate <span class="unit">(bpm)</span></label>
+                                        <input type="number" name="thalach" class="form-input" placeholder="e.g., 150"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Resting Heart Rate</label>
+                                        <input type="number" name="thalrest" class="form-input" placeholder="e.g., 70"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Peak Exercise Blood Pressure</label>
+                                        <input type="number" name="tpeakbps" class="form-input" placeholder="e.g., 170"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Resting BP Diastolic</label>
+                                        <input type="number" name="trestbpd" class="form-input" placeholder="e.g., 80"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Exercise Angina</label>
+                                        <select name="exang" class="form-select">
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">ST Depression <span
+                                                class="unit">(oldpeak)</span></label>
+                                        <input type="number" step="0.1" name="oldpeak" class="form-input"
+                                            placeholder="e.g., 1.0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">ST Slope</label>
+                                        <select name="slope" class="form-select">
+                                            <option value="1">Upsloping</option>
+                                            <option value="2">Flat</option>
+                                            <option value="3">Downsloping</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Major Vessels <span class="unit">(ca:
+                                                0-3)</span></label>
+                                        <select name="ca" class="form-select">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional -->
+                            <div class="form-section">
+                                <div class="section-title">Additional Parameters</div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Thalassemia</label>
+                                        <select name="thal" class="form-select">
+                                            <option value="3">Normal</option>
+                                            <option value="6">Fixed Defect</option>
+                                            <option value="7">Reversible Defect</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group span-2">
+                                        <label class="form-label">ECG Signal File</label>
+                                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                                            <input type="file" name="ecg_file" accept=".csv" class="form-input"
+                                                style="padding: 10px;" id="ecgFileInput">
+                                            <span id="ecgUploadStatus" style="font-size: 0.85rem; color: #059669; font-weight: 600; display: none; align-items: center; gap: 6px;">
+                                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                                </svg>
+                                                ecg has successfully uploaded
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="submit-btn" id="predictBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                                </svg>
+                                Analyze Heart Disease Risk
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Results Panel (Initially Empty) -->
+                <div class="results-stack" id="resultsPanel">
+                    <div class="card">
+                        <div class="card-header card-header-alt">
+                            <h2 class="card-title">Analysis Results</h2>
+                            <p class="card-subtitle">AI-powered cardiac risk assessment</p>
+                        </div>
+                        <div class="card-body" id="resultsBody">
+                            <div style="text-align: center; color: var(--text-light); padding: 40px 0;">
+                                <svg style="width: 48px; height: 48px; fill: none; stroke: currentColor; margin-bottom: 10px;"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                                <p>Submit clinical data to see analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW SECTION: CARDIAC SCIENCES -->
+            <div class="card card-horizontal">
+                <div class="card-horizontal-content">
+                    <h2 class="ch-title">Cardiac Sciences</h2>
+                    <p class="ch-desc">
+                        The human heart is an incredible organ responsible for pumping blood throughout the body. Our Cardiac Sciences department utilizes the latest technology to monitor, diagnose, and treat various heart conditions, preventing severe complications... <span class="ch-read-more" onclick="openExploreModal()">Read More</span>
+                    </p>
+                    <div class="ch-sub-title">Top Specialties & Procedures</div>
+                    <div>
+                        <span class="pill-badge">HEART TRANSPLANT</span>
+                    </div>
+                    <div class="ch-button-group">
+                        <button class="btn-outline-arrow" onclick="showView('cardiologists')">
+                            FIND DOCTOR
+                            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                        </button>
+                        <button class="btn-outline-arrow" onclick="openExploreModal()">
+                            EXPLORE MORE
+                            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-horizontal-img-col">
+                    <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80" alt="Doctor holding heart model" class="card-horizontal-img">
+                </div>
+            </div>
+
+            <!-- NEW SECTION: HOW IT WORKS -->
+            <div class="section-heading">How It Works</div>
+            <div class="how-it-works-grid">
+                <div class="step-card">
+                    <div class="step-icon">📋</div>
+                    <h3 style="color: var(--apollo-navy); font-weight: 700;">1. Enter Data</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-gray); margin-top: 10px;">Input patient clinical parameters & demographics into our secure system.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">🤖</div>
+                    <h3 style="color: var(--apollo-navy); font-weight: 700;">2. AI Analysis</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-gray); margin-top: 10px;">Our ensemble XGBoost and CNN models analyze the data in real-time.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">📊</div>
+                    <h3 style="color: var(--apollo-navy); font-weight: 700;">3. Get Insights</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-gray); margin-top: 10px;">Receive instant risk stratification, ECG interpretation, and clinical recommendations.</p>
+                </div>
+            </div>
+
+            <!-- NEW SECTION: PATIENT TESTIMONIALS -->
+            <div class="section-heading">Trusted by Thousands</div>
+            <div class="testimonials-slider">
+                <div class="testimonial-card">
+                    <div class="quote-mark">"</div>
+                    <p style="font-size: 0.95rem; font-style: italic; margin-bottom: 20px;">"The early detection from CardioHealth allowed my doctor to intervene before my condition worsened. Truly life-saving."</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://ui-avatars.com/api/?name=Arjun+M&background=00a8b5&color=fff&size=40" style="border-radius: 50%;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.9rem;">Arjun M.</div>
+                            <div style="font-size: 0.75rem; color: var(--text-light);">Recovering Patient</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-mark">"</div>
+                    <p style="font-size: 0.95rem; font-style: italic; margin-bottom: 20px;">"As a cardiologist, having an AI second opinion for complex ECGs has improved my diagnostic confidence significantly."</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://ui-avatars.com/api/?name=Dr+Mehta&background=1a1f71&color=fff&size=40" style="border-radius: 50%;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.9rem;">Dr. R. Mehta</div>
+                            <div style="font-size: 0.75rem; color: var(--text-light);">Senior Cardiologist</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-mark">"</div>
+                    <p style="font-size: 0.95rem; font-style: italic; margin-bottom: 20px;">"The platform is intuitive, and the risk assessment models are clinically robust. Highly recommended for preventive care."</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://ui-avatars.com/api/?name=Priya+S&background=f26522&color=fff&size=40" style="border-radius: 50%;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.9rem;">Priya S.</div>
+                            <div style="font-size: 0.75rem; color: var(--text-light);">Health Administrator</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: CARDIOLOGISTS -->
+        <div id="view-cardiologists" class="view-section">
+            <div class="filter-bar">
+                <span class="filter-label">Filter by City:</span>
+                <select id="cityFilter" class="form-select" style="max-width: 200px;" onchange="fetchCardiologists()">
+                    <option value="">All Cities</option>
+                    <option value="Delhi">Delhi NCR</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Kolkata">Kolkata</option>
+                </select>
+            </div>
+
+            <div id="cardiologistsGrid" class="cardiologists-grid">
+                <!-- Cards injected here -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                    <div
+                        style="display: inline-block; width: 40px; height: 40px; border: 3px solid #ddd; border-top-color: var(--apollo-teal); border-radius: 50%; animation: spin 1s linear infinite;">
+                    </div>
+                    <p style="margin-top: 10px; color: var(--text-gray);">Loading top specialists...</p>
+                </div>
+            </div>
+            <style>
+                @keyframes spin {
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+        </div>
+
+        <!-- VIEW: SERVICES -->
+        <div id="view-services" class="view-section">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h1 style="color: var(--apollo-navy); font-size: 2.5rem; margin-bottom: 15px;">Our Services</h1>
+                <p style="color: var(--text-gray); max-width: 600px; margin: 0 auto;">Comprehensive cardiac care
+                    solutions powered by advanced technology and medical expertise.</p>
+            </div>
+
+            <div class="cardiologists-grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+                <div class="card doc-card">
+                    <div class="card-body">
+                        <div
+                            style="width: 60px; height: 60px; background: var(--apollo-teal-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <svg style="width: 32px; height: 32px; fill: var(--apollo-teal);" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            </svg>
+                        </div>
+                        <h3 class="doc-name">AI Risk Assessment</h3>
+                        <p class="doc-meta" style="margin-top: 10px;">Instant analysis of cardiac risk using XGBoost
+                            models trained on over 50,000 patient records. Get immediate risk stratification and
+                            personalized recommendations.</p>
+                        <ul class="tips-list" style="margin-top: 15px;">
+                            <li class="meta-item">✔️ 95% Prediction Accuracy</li>
+                            <li class="meta-item">✔️ Instant Results</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card doc-card">
+                    <div class="card-body">
+                        <div
+                            style="width: 60px; height: 60px; background: #fff4ef; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <svg style="width: 32px; height: 32px; fill: var(--apollo-orange);" viewBox="0 0 24 24">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                        </div>
+                        <h3 class="doc-name">ECG Analysis</h3>
+                        <p class="doc-meta" style="margin-top: 10px;">Deep Learning CNN model specifically designed to
+                            detect myocardial infarction and arrhythmia from standard ECG images.</p>
+                        <ul class="tips-list" style="margin-top: 15px;">
+                            <li class="meta-item">✔️ Upload Image Support</li>
+                            <li class="meta-item">✔️ Pattern Recognition</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card doc-card">
+                    <div class="card-body">
+                        <div
+                            style="width: 60px; height: 60px; background: #e0e7ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <svg style="width: 32px; height: 32px; fill: var(--apollo-navy);" viewBox="0 0 24 24">
+                                <path
+                                    d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z" />
+                            </svg>
+                        </div>
+                        <h3 class="doc-name">Specialist Consultations</h3>
+                        <p class="doc-meta" style="margin-top: 10px;">Connect with India's top cardiologists for second
+                            opinions and treatment planning. Direct booking integration available.</p>
+                        <ul class="tips-list" style="margin-top: 15px;">
+                            <li class="meta-item">✔️ Top Rated Doctors</li>
+                            <li class="meta-item">✔️ Priority Booking</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: ABOUT -->
+        <div id="view-about" class="view-section">
+            <div class="card">
+                <div class="card-body" style="padding: 50px;">
+                    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                        <h1 style="color: var(--apollo-navy); font-size: 2.5rem; margin-bottom: 20px;">About
+                            CardioHealth</h1>
+                        <p style="font-size: 1.1rem; color: var(--text-gray); margin-bottom: 40px;">
+                            CardioHealth is a pioneering healthcare technology platform dedicated to making advanced
+                            cardiac care accessible to everyone. We combine clinical expertise with cutting-edge
+                            artificial intelligence to detect heart disease earlier and more accurately.
+                        </p>
+
+                        <div
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; text-align: left; margin-bottom: 50px;">
+                            <div>
+                                <h3 style="color: var(--apollo-teal); margin-bottom: 10px;">Our Mission</h3>
+                                <p style="font-size: 0.9rem;">To reduce cardiac mortality through early detection and
+                                    accessible specialist care.</p>
+                            </div>
+                            <div>
+                                <h3 style="color: var(--apollo-teal); margin-bottom: 10px;">Our Technology</h3>
+                                <p style="font-size: 0.9rem;">Proprietary ensemble models combining XGBoost and
+                                    Convolutional Neural Networks.</p>
+                            </div>
+                            <div>
+                                <h3 style="color: var(--apollo-teal); margin-bottom: 10px;">Our Network</h3>
+                                <p style="font-size: 0.9rem;">Partnered with 50+ leading hospitals and 200+ top
+                                    cardiologists across India.</p>
+                            </div>
+                        </div>
+
+                        <hr style="border: none; border-top: 1px solid var(--border-light); margin: 40px 0;">
+
+                        <h3 style="color: var(--apollo-navy); margin-bottom: 20px;">Review Board</h3>
+                        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                            <div style="text-align: center;">
+                                <img src="https://ui-avatars.com/api/?name=Naresh+Trehan&background=00a8b5&color=fff&size=80"
+                                    style="border-radius: 50%; margin-bottom: 10px;">
+                                <div style="font-weight: 600;">Dr. Naresh Trehan</div>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Chief Medical Advisor</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <img src="https://ui-avatars.com/api/?name=Devi+Shetty&background=1a1f71&color=fff&size=80"
+                                    style="border-radius: 50%; margin-bottom: 10px;">
+                                <div style="font-weight: 600;">Dr. Devi Shetty</div>
+                                <div style="font-size: 0.8rem; color: var(--text-light);">Surgical Director</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: CONTACT -->
+        <div id="view-contact" class="view-section">
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header card-header-orange">
+                        <h2 class="card-title">Get in Touch</h2>
+                        <p class="card-subtitle">We are here to help you 24/7</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="contactForm" onsubmit="handleContact(event)">
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="name" class="form-input" required>
+                            </div>
+                            <div class="form-row" style="margin-bottom: 20px; grid-template-columns: 1fr 1fr;">
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" name="email" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" name="phone" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label class="form-label">Message</label>
+                                <textarea name="message" class="form-input" rows="5" required
+                                    placeholder="How can we help you?"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="doc-name" style="margin-bottom: 20px;">Contact Info</h3>
+
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <div class="meta-item">
+                                <div
+                                    style="width: 40px; height: 40px; background: var(--apollo-teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    📍
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Headquarters</div>
+                                    <div style="font-size: 0.9rem; color: var(--text-gray);">Tech Park, Sector 48,
+                                        Gurugram</div>
+                                </div>
+                            </div>
+
+                            <div class="meta-item">
+                                <div
+                                    style="width: 40px; height: 40px; background: var(--apollo-teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    📞
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Helpline</div>
+                                    <div style="font-size: 0.9rem; color: var(--text-gray);">1800-123-456</div>
+                                </div>
+                            </div>
+
+                            <div class="meta-item">
+                                <div
+                                    style="width: 40px; height: 40px; background: var(--apollo-teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    📧
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Email</div>
+                                    <div style="font-size: 0.9rem; color: var(--text-gray);">support@cardiohealth.com
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p class="footer-text">Powered by XGBoost Machine Learning & Deep Learning CNN Models</p>
+            <div style="margin-top: 10px; font-size: 0.8rem; opacity: 0.6;">
+                © 2026 CardioHealth. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Models & Scripts -->
+    <div class="modal-overlay" id="appointmentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Book Appointment</h3>
+                <button class="modal-close" onclick="closeModals()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="appointmentForm" onsubmit="handleAppointment(event)">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label class="form-label">Select Cardiologist</label>
+                        <select name="cardiologist_id" id="modalDoctorSelect" class="form-select" required>
+                            <option value="">-- Choose a Doctor --</option>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label class="form-label">Patient Name</label>
+                        <input type="text" name="patient_name" class="form-input" required>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 15px; grid-template-columns: 1fr 1fr;">
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" name="phone" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 15px; grid-template-columns: 1fr 1fr;">
+                        <div class="form-group">
+                            <label class="form-label">Date</label>
+                            <input type="date" name="appointment_date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Time</label>
+                            <input type="time" name="appointment_time" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="form-label">Reason for Visit</label>
+                        <textarea name="reason" class="form-input" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" style="margin-top: 0;">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Explore Heart Modal -->
+    <div class="modal-overlay" id="exploreHeartModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">About Cardiac Sciences</h3>
+                <button class="modal-close" onclick="closeExploreModal()">×</button>
+            </div>
+            <div class="modal-body" style="font-size: 0.95rem; color: var(--text-dark); line-height: 1.6;">
+                <p style="margin-bottom: 15px;">The human heart is an incredible organ responsible for pumping blood throughout the body. Our <strong>Cardiac Sciences</strong> department utilizes the latest technology to monitor, diagnose, and treat various heart conditions, preventing severe complications.</p>
+                <div style="background: var(--bg-light); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong style="color: var(--apollo-navy);">Did you know?</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px; color: var(--text-gray);">
+                        <li>The heart beats about 100,000 times a day.</li>
+                        <li>It pumps approximately 2,000 gallons of blood every day.</li>
+                        <li>An electrical system controls the rhythm of your heart.</li>
+                    </ul>
+                </div>
+                <p>CardioHealth's prediction application uses state-of-the-art Deep Learning models to rapidly assess cardiovascular risk factors. By providing key clinical parameters, you enable our algorithms to perform a rigorous secondary check alongside trusted cardiologists.</p>
+                <div style="text-align: right; margin-top: 25px;">
+                    <button class="submit-btn" style="display: inline-block; width: auto; padding: 0 30px;" onclick="closeExploreModal()">Got It</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="notification" id="notificationToast">
+        <div class="notif-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor" id="notifIconSvg">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+        </div>
+        <div>
+            <div class="notif-title" id="notifTitle">Success</div>
+            <div class="notif-msg" id="notifMsg">Operation completed successfully</div>
+        </div>
+    </div>
+
+    <script>
+        // Exploration Handlers
+        function openExploreModal() {
+            document.getElementById('exploreHeartModal').classList.add('open');
+        }
+        function closeExploreModal() {
+            document.getElementById('exploreHeartModal').classList.remove('open');
+        }
+
+        // State
+        const state = {
+            currentView: 'home',
+            cardiologists: [],
+            selectedDoctor: null
+        };
+
+        // DOM Elements
+        const views = {
+            home: document.getElementById('view-home'),
+            cardiologists: document.getElementById('view-cardiologists'),
+            services: document.getElementById('view-services'),
+            about: document.getElementById('view-about'),
+            contact: document.getElementById('view-contact')
+        };
+
+        const navLinks = {
+            home: document.getElementById('nav-home'),
+            cardiologists: document.getElementById('nav-cardiologists'),
+            services: document.getElementById('nav-services'),
+            about: document.getElementById('nav-about'),
+            contact: document.getElementById('nav-contact')
+        };
+
+        // Navigation
+        function showView(viewId) {
+            // Update State
+            state.currentView = viewId;
+
+            // Toggle Views
+            Object.values(views).forEach(el => el.classList.remove('active'));
+            if (views[viewId]) views[viewId].classList.add('active');
+
+            // Toggle Nav Links
+            Object.values(navLinks).forEach(el => el.classList.remove('active'));
+            if (navLinks[viewId]) navLinks[viewId].classList.add('active');
+
+            // View Specific Actions
+            if (viewId === 'cardiologists') {
+                fetchCardiologists();
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Cardiologists
+        async function fetchCardiologists() {
+            const city = document.getElementById('cityFilter').value;
+            const grid = document.getElementById('cardiologistsGrid');
+
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                    <div style="display: inline-block; width: 40px; height: 40px; border: 3px solid #ddd; border-top-color: var(--apollo-teal); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <p>Finding specialists near you...</p>
+                </div>`;
+
+            try {
+                const url = city ? `/api/cardiologists?city=${city}` : '/api/cardiologists';
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    state.cardiologists = data.cardiologists;
+                    renderCardiologists(data.cardiologists);
+                } else {
+                    grid.innerHTML = `<p style="text-align:center; color:red;">${data.error}</p>`;
+                }
+            } catch (err) {
+                console.error(err);
+                grid.innerHTML = '<p style="text-align:center; color:red;">Failed to load cardiologists.</p>';
+            }
+        }
+
+        function renderCardiologists(experts) {
+            const grid = document.getElementById('cardiologistsGrid');
+            grid.innerHTML = '';
+
+            if (experts.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">No cardiologists found in this area.</p>`;
+                return;
+            }
+
+            experts.forEach(doc => {
+                const card = document.createElement('div');
+                card.className = 'card doc-card';
+                card.innerHTML = `
+                    <div class="doc-img-container">
+                        <img src="${doc.image_url || 'https://via.placeholder.com/300x200?text=Doctor'}" class="doc-img" alt="${doc.name}">
+                        <div style="position: absolute; top: 10px; right: 10px; background: white; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                             ⭐ ${doc.rating}
+                        </div>
+                    </div>
+                    <div class="doc-info">
+                        <h3 class="doc-name">${doc.name}</h3>
+                        <p class="doc-spec">${doc.specialty}</p>
+                        <div class="doc-meta">
+                            <div class="meta-item">
+                                <span class="meta-icon">🏥</span> ${doc.hospital}
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-icon">📍</span> ${doc.city}
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-icon">🕒</span> ${doc.experience} years exp.
+                            </div>
+                        </div>
+                        <button onclick="openAppointmentModal(${doc.id})" class="doc-btn">Book Appointment</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Modals
+        function openAppointmentModal(docId = null) {
+            const modal = document.getElementById('appointmentModal');
+            const select = document.getElementById('modalDoctorSelect');
+
+            // Populate select if empty or refresh
+            if (state.cardiologists.length === 0) {
+                // If opening from home page without visiting cardiologists tab
+                fetch('/api/cardiologists')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            state.cardiologists = data.cardiologists;
+                            populateDoctorSelect(data.cardiologists, docId);
+                        }
+                    });
+            } else {
+                populateDoctorSelect(state.cardiologists, docId);
+            }
+
+            modal.classList.add('open');
+        }
+
+        function populateDoctorSelect(docs, selectedId) {
+            const select = document.getElementById('modalDoctorSelect');
+            select.innerHTML = '<option value="">-- Choose a Doctor --</option>';
+            docs.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.id;
+                opt.textContent = `${d.name} (${d.hospital})`;
+                if (selectedId && d.id == selectedId) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(el => el.classList.remove('open'));
+        }
+
+        // Form Handlers
+        async function handlePrediction(e) {
+            e.preventDefault();
+            const btn = document.getElementById('predictBtn');
+            const form = e.target;
+            const resultsPanel = document.getElementById('resultsPanel');
+            const resultsBody = document.getElementById('resultsBody');
+
+            // Loading State
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Analyzing...';
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData(form);
+
+                // 1. Predict Data using XGBoost
+                const dataResponse = await fetch('/api/predict_data', {
+                    method: 'POST',
+                    body: formData
+                });
+                const dataResult = await dataResponse.json();
+
+                if (!dataResult.success) {
+                    throw new Error(dataResult.error || 'Data prediction failed');
+                }
+
+                // Keep track of final combined result
+                let combinedResult = {
+                    prediction: dataResult.prediction,
+                    prediction_text: dataResult.prediction_text,
+                    risk_score: dataResult.risk_score,
+                    patient_data: Object.fromEntries(formData.entries())
+                };
+
+                // Remove ecg_file from patient_data as it's a File object, which can't be stringified cleanly
+                delete combinedResult.patient_data.ecg_file;
+
+                // 2. Predict ECG (if provided)
+                const ecgFile = formData.get('ecg_file');
+                if (ecgFile && ecgFile.size > 0) {
+                    const ecgFormData = new FormData();
+                    ecgFormData.append('ecg_file', ecgFile);
+
+                    const ecgResponse = await fetch('/api/predict_ecg', {
+                        method: 'POST',
+                        body: ecgFormData
+                    });
+                    const ecgResult = await ecgResponse.json();
+
+                    if (ecgResult.success) {
+                        combinedResult.ecg_result = ecgResult.ecg_result;
+                        combinedResult.ecg_flag = ecgResult.ecg_flag;
+                        combinedResult.ecg_image_path = ecgResult.ecg_image_path;
+                    } else {
+                        throw new Error(ecgResult.error || 'ECG prediction failed');
+                    }
+                }
+
+                // 3. Final Prediction & Fusion
+                const finalResponse = await fetch('/api/predict_final', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(combinedResult)
+                });
+                const finalResult = await finalResponse.json();
+
+                if (finalResult.success) {
+                    // Merge results for rendering
+                    const renderData = {
+                        ...combinedResult,
+                        ...finalResult
+                    };
+                    renderResults(renderData);
+                    showNotification('Analysis Complete', 'Risk assessment finished successfully.');
+                } else {
+                    throw new Error(finalResult.error || 'Final analysis failed');
+                }
+
+            } catch (err) {
+                console.error(err);
+                showNotification('Error', err.message || 'Network error occurred', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function renderResults(data) {
+            // Color Logic
+            const isHigh = data.risk_level === 'high';
+            const riskClass = isHigh ? 'high-risk' : 'low-risk';
+            const riskColor = isHigh ? '#dc2626' : '#059669';
+            const riskMeterClass = isHigh ? 'high' : (data.risk_level === 'moderate' ? 'medium' : 'low');
+
+            const resultsBody = document.getElementById('resultsBody');
+
+            resultsBody.innerHTML = `
+                <div class="final-result ${riskClass}">
+                    <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Overall Risk Status</div>
+                    <div class="final-text">${data.final_result}</div>
+                    
+                    <div style="margin-top: 20px; text-align: left;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 0.8rem;">Risk Probability</span>
+                            <span style="font-weight: 700;">${data.risk_score}%</span>
+                        </div>
+                        <div class="meter-bar-bg">
+                            <div class="meter-bar-fill ${riskMeterClass}" style="width: ${data.risk_score}%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; display: grid; gap: 20px;">
+                    <div class="result-box">
+                        <div class="result-label">Model Prediction</div>
+                        <div style="font-weight: 600;">${data.prediction_text}</div>
+                    </div>
+                    
+                    ${data.ecg_result ? `
+                    <div class="result-box">
+                        <div class="result-label">ECG Analysis</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">${data.ecg_result}</div>
+                                <div style="font-size: 0.8rem; margin-top: 4px;">${data.ecg_flag === 0 ? 'Normal Pattern' : 'Abnormality Detected'}</div>
+                            </div>
+                            <div class="status-dot" style="width: 12px; height: 12px; background: ${data.ecg_flag === 0 ? '#10b981' : '#f59e0b'};"></div>
+                        </div>
+                    </div>` : ''}
+                    
+                    <div class="result-box">
+                        <div class="result-label">AI Recommendations</div>
+                        <ul style="padding-left: 20px; font-size: 0.9rem;">
+                            ${data.suggestions.map(s => `<li style="margin-bottom: 5px;">${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <button onclick="openAppointmentModal()" class="cta-button" style="width: 100%; text-align: center; margin-top: 25px; padding: 15px;">Book Preventive Checkup</button>
+            `;
+
+            // Scroll to results
+            document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function handleAppointment(e) {
+            e.preventDefault();
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+
+            btn.disabled = true;
+            btn.innerText = 'Booking...';
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('/api/appointments', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    showNotification('Appointment Booked', 'Confirmations sent to your email.');
+                    closeModals();
+                    form.reset();
+                } else {
+                    showNotification('Booking Failed', data.error, 'error');
+                }
+            } catch (err) {
+                showNotification('Error', 'Failed to book appointment', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Confirm Booking';
+            }
+        }
+
+        async function handleContact(e) {
+            e.preventDefault();
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+
+            btn.disabled = true;
+            btn.innerText = 'Sending...';
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    showNotification('Message Sent', 'We will contact you shortly.');
+                    form.reset();
+                } else {
+                    showNotification('Error', data.error, 'error');
+                }
+            } catch (err) {
+                showNotification('Error', 'Failed to send message', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Send Message';
+            }
+        }
+
+        // Notification System
+        function showNotification(title, message, type = 'success') {
+            const toast = document.getElementById('notificationToast');
+            const titleEl = document.getElementById('notifTitle');
+            const msgEl = document.getElementById('notifMsg');
+            const iconSvg = document.getElementById('notifIconSvg');
+
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+
+            toast.className = `notification ${type === 'error' ? 'notif-error' : 'notif-success'}`;
+
+            // Show
+            setTimeout(() => toast.classList.add('show'), 10);
+
+            // Hide
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        // Initial Fetch for Doctor data on load (optional or lazy load)
+        // fetchCardiologists(); // We lazy load when tab is clicked
+
+        // Dark Mode Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const root = document.documentElement;
+        
+        // Check for saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+            themeToggle.innerText = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            if (root.getAttribute('data-theme') === 'dark') {
+                root.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerText = '🌙';
+            } else {
+                root.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerText = '☀️';
+            }
+        });
+
+        // ECG File Upload UI Handler
+        const ecgInput = document.getElementById('ecgFileInput');
+        const ecgStatus = document.getElementById('ecgUploadStatus');
+        
+        if (ecgInput) {
+            ecgInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    ecgStatus.style.display = 'flex';
+                    this.style.display = 'none'; // Hide input to remove native filename display
+                } else {
+                    ecgStatus.style.display = 'none';
+                    this.style.display = 'block';
+                }
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>

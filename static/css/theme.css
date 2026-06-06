@@ -1,0 +1,183 @@
+/* Glassmorphism & Modern Theme Customizations */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --bg-gradient-1: rgba(0, 168, 181, 0.08);
+    --bg-gradient-2: rgba(242, 101, 34, 0.05);
+}
+
+[data-theme='dark'] {
+    --apollo-teal: #00e0f2;
+    --apollo-teal-dark: #00a8b5;
+    --apollo-teal-light: #122c30;
+    --apollo-orange: #ff8547;
+    --apollo-orange-light: #331e15;
+    --apollo-navy: #7ca0ff;
+    --apollo-navy-light: #a6c0ff;
+    --text-dark: #f0f0f5;
+    --text-gray: #b5b5c0;
+    --text-light: #707080;
+    --bg-light: #0b0f19;
+    --bg-white: #131826;
+    --border-light: #283042;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.7);
+    --glass-bg: rgba(19, 24, 38, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --bg-gradient-1: rgba(0, 210, 227, 0.06);
+    --bg-gradient-2: rgba(255, 127, 64, 0.06);
+}
+
+/* Background Animation */
+body {
+    background: var(--bg-light);
+    background-image: 
+        radial-gradient(ellipse at top left, var(--bg-gradient-1) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, var(--bg-gradient-2) 0%, transparent 50%);
+    background-attachment: fixed;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Header Enhancements */
+.header {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border) !important;
+    box-shadow: var(--glass-shadow) !important;
+    transition: background 0.4s;
+}
+
+/* Form and Cards */
+.card, .form-input, .form-select, .view-section, .filter-bar {
+    transition: background-color 0.4s, border-color 0.4s, color 0.4s, box-shadow 0.3s, transform 0.3s;
+}
+
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+/* Navigation text in dark mode */
+[data-theme='dark'] .nav-link { color: #d0d0d0; }
+[data-theme='dark'] .nav-link.active { color: var(--apollo-teal); }
+[data-theme='dark'] .logo-text { color: #f0f0f5; }
+
+/* Micro animations */
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+.form-input:focus, .form-select:focus { 
+    border-color: var(--apollo-teal) !important; 
+    box-shadow: 0 0 0 3px rgba(0, 168, 181, 0.25) !important; 
+    transform: translateY(-2px); 
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: transparent;
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+.theme-toggle:hover {
+    background: var(--bg-light);
+    transform: scale(1.1);
+}
+
+/* New Section Styles */
+.section-heading {
+    text-align: center;
+    margin: 60px 0 40px;
+    font-size: 2.2rem;
+    color: var(--apollo-navy);
+    font-weight: 700;
+}
+
+.how-it-works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.step-card {
+    text-align: center;
+    padding: 35px 25px;
+    border-radius: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.step-card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: var(--shadow-hover);
+}
+
+.step-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, var(--apollo-teal-light) 0%, var(--bg-white) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    box-shadow: 0 10px 25px rgba(0, 168, 181, 0.15);
+}
+
+/* Testimonials */
+.testimonials-slider {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    padding: 20px 10px 40px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--apollo-teal) var(--bg-light);
+}
+.testimonials-slider::-webkit-scrollbar { height: 8px; }
+.testimonials-slider::-webkit-scrollbar-thumb { background: var(--apollo-teal); border-radius: 4px; }
+.testimonials-slider::-webkit-scrollbar-track { background: var(--bg-light); border-radius: 4px; }
+
+.testimonial-card {
+    flex: 0 0 350px;
+    scroll-snap-align: center;
+    padding: 30px;
+    border-radius: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+.quote-mark { 
+    font-size: 4rem; 
+    color: var(--apollo-teal); 
+    line-height: 0; 
+    opacity: 0.2; 
+    margin-bottom: 20px; 
+}
+[data-theme='dark'] .quote-mark { opacity: 0.4; }
+[data-theme='dark'] .card-header p.card-subtitle { color: #fff; }
+[data-theme='dark'] .hero-title, [data-theme='dark'] .hero-desc, [data-theme='dark'] .form-label { color: var(--text-dark); }
+[data-theme='dark'] .section-heading { color: var(--text-dark); }
+
+@media (max-width: 768px) {
+    .how-it-works-grid {
+        grid-template-columns: 1fr;
+    }
+}
